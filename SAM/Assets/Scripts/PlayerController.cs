@@ -8,8 +8,7 @@ using System.Collections;
 /// applies a force to the PC, which responds accordingly.
 /// </summary>
 public class PlayerController : MonoBehaviour {
-
-    public float speed;     
+    public float speed;
     private Rigidbody rb;
 
     /// <summary>
@@ -35,5 +34,4 @@ public class PlayerController : MonoBehaviour {
 
         rb.AddForce(movement * speed);
     }
-
 }

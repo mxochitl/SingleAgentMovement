@@ -17,17 +17,16 @@ using UnityEngine.SceneManagement;
 /// One use will be for AI demos that are switched up based on keyboard input. For that, 
 /// the number keys 0..9 will be used to dial in whichever phase the user wants to see.
 /// </summary>
-
-public class PhaseManager : MonoBehaviour
-{
+public class PhaseManager : MonoBehaviour {
     // Set prefabs
-    public GameObject PlayerPrefab;     // You, the player
-    public GameObject HunterPrefab;     // Agent doing chasing
-    public GameObject WolfPrefab;       // Agent getting chased
-    public GameObject RedPrefab;     // reserved for future use
+    public GameObject PlayerPrefab; // You, the player
+    public GameObject HunterPrefab; // Agent doing chasing
+    public GameObject WolfPrefab; // Agent getting chased
+
+    public GameObject RedPrefab; // reserved for future use
     // public GameObject BluePrefab;    // reserved for future use
 
-    public NPCController house;         // THis goes away
+    public NPCController house; // THis goes away
 
     // Set up to use spawn points. Can add more here, and also add them to the 
     // Unity project. This won't be a good idea later on when you want to spawn
@@ -40,29 +39,26 @@ public class PhaseManager : MonoBehaviour
     public GameObject spawner3;
     public Text SpawnText3;
 
-    private List<GameObject> spawnedNPCs;   // When you need to iterate over a number of agents.
+    private List<GameObject> spawnedNPCs; // When you need to iterate over a number of agents.
 
-    private int currentMapState = 0;           // This stores which state the map or level is in.
-    private int previousMapState = 0;          // The map state we were just in
+    private int currentMapState = 0; // This stores which state the map or level is in.
+    private int previousMapState = 0; // The map state we were just in
 
     public int MapState => currentMapState;
 
-    LineRenderer line;                  // GOING AWAY
+    LineRenderer line; // GOING AWAY
 
     public GameObject[] Path;
 
     public bool keyClicked = false;
 
-    public Text narrator;                   // 
-
-
+    public Text narrator; // 
 
 
     // Use this for initialization. Create any initial NPCs here and store them in the 
     // spawnedNPCs list. You can always add/remove NPCs later on.
 
-    void Start()
-    {
+    void Start() {
         narrator.text = @"Press 1-7: {1: Seek/Flee, 
         3: Pursue/Evade, 5: Face/ Wander, 6: Align/Wander, 7: Wander, 0: Restart}";
         spawnedNPCs = new List<GameObject>();
@@ -73,51 +69,44 @@ public class PhaseManager : MonoBehaviour
     /// Unhide or spawn NPCs (agents) as needed, and give them things (like movements)
     /// to do. For each case you may well have more than one thing to do.
     /// </summary>
-    private void Update()
-    {
+    private void Update() {
         string inputstring = Input.inputString;
         int num;
         // Look for a number key click
-        if (inputstring.Length > 0)
-        {
+        if (inputstring.Length > 0) {
             Debug.Log(inputstring);
-            if (Int32.TryParse(inputstring, out num))
-            {
-                
-                if (num == 0)
-                {
+            if (Int32.TryParse(inputstring, out num)) {
+                if (num == 0) {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
 
-                    if (num == 1)
-                    {
-                        EnterMapStateOne();
-                    }
-                    if (num == 2)
-                    {
-                        EnterMapStateTwo();
-                    }
-                    if (num == 3)
-                    {
-                        EnterMapStateThree();
-                    }
-                    if (num == 4)
-                    {
-                        EnterMapStateFour();
-                    }
-                    if (num == 5)
-                    {
-                        EnterMapStateFive();
-                    }
-                    if (num == 6)
-                    {
-                        EnterMapStateSix();
-                    }
-                    if (num == 7)
-                    {
-                        EnterMapStateSeven();
-                    }
+                if (num == 1) {
+                    EnterMapStateOne();
+                }
 
+                if (num == 2) {
+                    EnterMapStateTwo();
+                }
+
+                if (num == 3) {
+                    EnterMapStateThree();
+                }
+
+                if (num == 4) {
+                    EnterMapStateFour();
+                }
+
+                if (num == 5) {
+                    EnterMapStateFive();
+                }
+
+                if (num == 6) {
+                    EnterMapStateSix();
+                }
+
+                if (num == 7) {
+                    EnterMapStateSeven();
+                }
             }
         }
 
@@ -126,8 +115,7 @@ public class PhaseManager : MonoBehaviour
             return;
     }
 
-    private void EnterMapStateOne()
-    {
+    private void EnterMapStateOne() {
         // Clear the list of NPCs
         //spawnedNPCs = new List<GameObject>();
         narrator.text = "In MapState Zero, the hunter will seek the fleeing wolf o.o\nSEEKing you out";
@@ -148,8 +136,7 @@ public class PhaseManager : MonoBehaviour
     }
 
 
-    private void EnterMapStateTwo()
-    {
+    private void EnterMapStateTwo() {
         // Clear list and set text
         spawnedNPCs = new List<GameObject>();
         narrator.text = "In MapState Zero, the wolf will flee the hunter 0.0";
@@ -166,28 +153,24 @@ public class PhaseManager : MonoBehaviour
         //Invoke("SeekFarewell", 15);
     }
 
-    private void EnterMapStateThree()
-    {
+    private void EnterMapStateThree() {
         spawnedNPCs = new List<GameObject>();
-        
-        
+
+
         narrator.text = "In MapState Two, we're going to Pursue >:) !";
         spawnedNPCs.Add(SpawnItem(spawner1, HunterPrefab, null, SpawnText1, 3));
-        
+
         //Invoke("SpawnWolfEvade", 0);
         SpawnWolf(4); // Spawn a wolf with a map state of 4 (evading)
         setTarget(); // set targets to each other
         //Invoke("PursueMeeting", 2);
-
-
     }
 
-    private void EnterMapStateFour()
-    {
+    private void EnterMapStateFour() {
         spawnedNPCs = new List<GameObject>();
         narrator.text = "In MapSate Three, we're going to Evade Dx";
         spawnedNPCs.Add(SpawnItem(spawner1, HunterPrefab, null, SpawnText1, 4));
-        
+
         Invoke("EvadeMeeting", 0);
     }
 
@@ -206,8 +189,7 @@ public class PhaseManager : MonoBehaviour
     }
 
     private void EnterMapStateSix() // Align
-    { 
-
+    {
         /* 
         spawnedNPCs = new List<GameObject>();
         narrator.text = "Entering MapState Five...aligning";
@@ -218,7 +200,7 @@ public class PhaseManager : MonoBehaviour
         narrator.text = "Align with Wander";
 
         spawnedNPCs.Add(SpawnItem(spawner1, HunterPrefab, null, SpawnText1, 5));
-        
+
         SpawnWolf(7);
         spawnedNPCs[0].GetComponent<SteeringBehavior>().target = spawnedNPCs[1].GetComponent<NPCController>();
         //Invoke("SpawnWolfWander", 0);
@@ -229,7 +211,7 @@ public class PhaseManager : MonoBehaviour
     private void EnterMapStateSeven() // Wander
     {
         spawnedNPCs = new List<GameObject>();
-        
+
         narrator.text = "Let's both Wander!";
         spawnedNPCs.Add(SpawnItem(spawner2, HunterPrefab, null, SpawnText2, 7));
         spawnedNPCs.Add(SpawnItem(spawner1, WolfPrefab, null, SpawnText2, 7));
@@ -246,17 +228,18 @@ public class PhaseManager : MonoBehaviour
     /// <param name="spawnText"></param>
     /// <param name="mapState"></param>
     /// <returns></returns>
-    private GameObject SpawnItem(GameObject spawner, GameObject spawnPrefab, NPCController target, Text spawnText, int mapState)
-    {
+    private GameObject SpawnItem(GameObject spawner, GameObject spawnPrefab, NPCController target, Text spawnText,
+        int mapState) {
         Vector3 size = spawner.transform.localScale;
-        Vector3 position = spawner.transform.position + new Vector3(UnityEngine.Random.Range(-size.x / 2, size.x / 2), 0, UnityEngine.Random.Range(-size.z / 2, size.z / 2));
+        Vector3 position = spawner.transform.position + new Vector3(UnityEngine.Random.Range(-size.x / 2, size.x / 2),
+                               0, UnityEngine.Random.Range(-size.z / 2, size.z / 2));
         GameObject temp = Instantiate(spawnPrefab, position, Quaternion.identity);
-        if (target)
-        {
+        if (target) {
             temp.GetComponent<SteeringBehavior>().target = target;
         }
+
         temp.GetComponent<NPCController>().label = spawnText;
-        temp.GetComponent<NPCController>().mapState = mapState;         // This is separate from the NPC's internal state
+        temp.GetComponent<NPCController>().mapState = mapState; // This is separate from the NPC's internal state
         Camera.main.GetComponent<CameraController>().player = temp;
         return temp;
     }
@@ -265,78 +248,68 @@ public class PhaseManager : MonoBehaviour
     // You make them happen when you want to by using the Invoke() method.
     // These aren't needed for the first assignment.
 
-    private void SpawnWolf(int num)
-    { 
+    private void SpawnWolf(int num) {
         spawnedNPCs.Add(SpawnItem(spawner2, WolfPrefab, null, SpawnText2, num));
-    } 
-    private void SpawnHunter(int num)
-    { 
+    }
+
+    private void SpawnHunter(int num) {
         spawnedNPCs.Add(SpawnItem(spawner2, HunterPrefab, null, SpawnText2, num));
-    } 
-    private void SpawnHunterFlee()
-    { 
+    }
+
+    private void SpawnHunterFlee() {
         narrator.text = "The Hunter appears, Fleeing";
         spawnedNPCs.Add(SpawnItem(spawner2, HunterPrefab, null, SpawnText2, 2));
     }
 
-    private void SpawnWolfEvade()
-    { 
+    private void SpawnWolfEvade() {
         narrator.text = "The Wolf appears, Evading";
         spawnedNPCs.Add(SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 4));
     }
 
-    private void SpawnWolfWander()
-    { 
+    private void SpawnWolfWander() {
         narrator.text = "The Wolf appears, Wandering";
         spawnedNPCs.Add(SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 7));
     }
 
-    private void Meeting1()
-    {
+    private void Meeting1() {
         narrator.text = "The Wolf and Hunter have meet.";
-        if (currentMapState == 0)
-        {
+        if (currentMapState == 0) {
             spawnedNPCs[0].GetComponent<SteeringBehavior>().target = spawnedNPCs[1].GetComponent<NPCController>();
             spawnedNPCs[1].GetComponent<SteeringBehavior>().target = spawnedNPCs[0].GetComponent<NPCController>();
         }
+
         SetArrive(spawnedNPCs[0]);
         SetArrive(spawnedNPCs[1]);
     }
 
-    private void SeekMeeting()
-    {
+    private void SeekMeeting() {
         /// narrator.text = "SEEKing you out";
         // put more actions in here
 
-        if (currentMapState == 0)
-        {
+        if (currentMapState == 0) {
             spawnedNPCs[0].GetComponent<SteeringBehavior>().target = spawnedNPCs[1].GetComponent<NPCController>();
             spawnedNPCs[1].GetComponent<SteeringBehavior>().target = spawnedNPCs[0].GetComponent<NPCController>();
         }
+
         //SetArrive(spawnedNPCs[0]);
         //SetArrive(spawnedNPCs[1]);
     }
 
-    private void Farewell()
-    {
-
+    private void Farewell() {
         spawnedNPCs.Clear(); // = new List<GameObject>();
-
     }
 
-    private void setTarget()
-    {
+    private void setTarget() {
         spawnedNPCs[0].GetComponent<SteeringBehavior>().target = spawnedNPCs[1].GetComponent<NPCController>();
         spawnedNPCs[1].GetComponent<SteeringBehavior>().target = spawnedNPCs[0].GetComponent<NPCController>();
-        
     }
 
 
     // Here is an example of a method you might want for when an arrival actually happens.
-    private void SetArrive(GameObject character)
-    {
+    private void SetArrive(GameObject character) {
         character.GetComponent<NPCController>().mapState = 0; // Whatever the new map state is after arrival
-        character.GetComponent<NPCController>().DrawConcentricCircle(character.GetComponent<SteeringBehavior>().slowRadiusL);
+        character.GetComponent<NPCController>()
+            .DrawConcentricCircle(character.GetComponent<SteeringBehavior>().slowRadiusL);
     }
 
     // Following the above examples, write whatever methods you need that you can bolt together to 
@@ -345,12 +318,10 @@ public class PhaseManager : MonoBehaviour
     // YOUR CODE HERE
 
     // Vestigial. Maybe you'll find it useful.
-    void OnDrawGizmosSelected()
-    {
+    void OnDrawGizmosSelected() {
         Gizmos.color = new Color(1, 0, 0, 0.5f);
         Gizmos.DrawCube(spawner1.transform.position, spawner1.transform.localScale);
         Gizmos.DrawCube(spawner2.transform.position, spawner2.transform.localScale);
         Gizmos.DrawCube(spawner3.transform.position, spawner3.transform.localScale);
     }
-
 }

@@ -3,34 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NPCController : MonoBehaviour
-{
+public class NPCController : MonoBehaviour {
     // Store variables for objects
-    private SteeringBehavior ai;    // Put all the brains for steering in its own module
-    private Rigidbody rb;           // You'll need this for dynamic steering
+    private SteeringBehavior ai; // Put all the brains for steering in its own module
+    private Rigidbody rb; // You'll need this for dynamic steering
 
     // For speed 
-    public Vector3 position;        // local pointer to the RigidBody's Location vector
-    public Vector3 velocity;        // Will be needed for dynamic steering
+    public Vector3 position; // local pointer to the RigidBody's Location vector
+    public Vector3 velocity; // Will be needed for dynamic steering
 
     // For rotation
-    public float orientation;       // scalar float for agent's current orientation
-    public float rotation;          // Will be needed for dynamic steering
+    public float orientation; // scalar float for agent's current orientation
+    public float rotation; // Will be needed for dynamic steering
 
-    public float maxSpeed;          // what it says
+    public float maxSpeed; // what it says
 
-    public int mapState;            // use this to control which "phase" the demo is in
+    public int mapState; // use this to control which "phase" the demo is in
 
-    private Vector3 linear;         // The results of the kinematic steering requested
-    private float angular;          // The results of the kinematic steering requested
+    private Vector3 linear; // The results of the kinematic steering requested
+    private float angular; // The results of the kinematic steering requested
 
-    public Text label;              // Used to displaying text nearby the agent as it moves around
-    LineRenderer line;              // Used to draw circles and other things
+    public Text label; // Used to displaying text nearby the agent as it moves around
+    LineRenderer line; // Used to draw circles and other things
 
     SteeringOutput steering;
 
-    private void Start()
-    {
+    private void Start() {
         ai = GetComponent<SteeringBehavior>();
         rb = GetComponent<Rigidbody>();
         line = GetComponent<LineRenderer>();
@@ -42,70 +40,68 @@ public class NPCController : MonoBehaviour
     /// Depending on the phase the demo is in, have the agent do the appropriate steering.
     /// 
     /// </summary>
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         //SteeringOutput steering;
-        switch (mapState)
-        {
+        switch (mapState) {
             case 1:
-                if (label)
-                {
+                if (label) {
                     label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Seek algorithm";
                 }
+
                 steering = ai.Seek();
 
 
                 break;
             case 2:
-                if (label)
-                {
+                if (label) {
                     label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Flee algorithm!";
                 }
+
                 steering = ai.Flee();
                 break;
             case 3:
-                if (label)
-                {
+                if (label) {
                     label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Pursue algorithm!";
                 }
+
                 steering = ai.Pursue();
                 break;
 
             case 4:
-                if (label)
-                {
+                if (label) {
                     label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Evade algorithm";
                 }
+
                 steering = ai.Evade();
                 break;
             case 5:
-                if (label)
-                {
+                if (label) {
                     label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Face algorithm";
                 }
+
                 steering = ai.Face();
                 break;
             case 6:
-                if (label)
-                {
+                if (label) {
                     label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Align algorithm";
                 }
+
                 steering = ai.Align();
                 break;
             case 7:
-                if (label)
-                {
+                if (label) {
                     label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Wander algorithm";
                 }
+
                 steering = ai.Wander();
                 break;
         }
+
         linear = steering.linear;
         angular = steering.angular;
 
         UpdateMovement(linear, angular, Time.deltaTime);
-        if (label)
-        {
+        if (label) {
             label.transform.position = Camera.main.WorldToScreenPoint(this.transform.position);
         }
     }
@@ -118,15 +114,13 @@ public class NPCController : MonoBehaviour
     /// <param name="steeringlin"></param>
     /// <param name="steeringang"></param>
     /// <param name="time"></param>
-    private void UpdateMovement(Vector3 steeringlin, float steeringang, float time)
-    {
+    private void UpdateMovement(Vector3 steeringlin, float steeringang, float time) {
         // Update the orientation, velocity and rotation
         orientation += rotation * time;
         velocity += steeringlin * time;
         rotation += steeringang * time;
 
-        if (velocity.magnitude > maxSpeed)
-        {
+        if (velocity.magnitude > maxSpeed) {
             velocity.Normalize();
             velocity *= maxSpeed;
         }
@@ -144,16 +138,14 @@ public class NPCController : MonoBehaviour
     /// Draws a circle with passed-in radius around the center point of the NPC itself.
     /// </summary>
     /// <param name="radius">Desired radius of the concentric circle</param>
-    public void DrawConcentricCircle(float radius)
-    {
+    public void DrawConcentricCircle(float radius) {
         line.positionCount = 51;
         line.useWorldSpace = false;
         float x;
         float z;
         float angle = 20f;
 
-        for (int i = 0; i < 51; i++)
-        {
+        for (int i = 0; i < 51; i++) {
             x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
             z = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
 
@@ -168,16 +160,14 @@ public class NPCController : MonoBehaviour
     /// </summary>
     /// <param name="position">position relative to the center point of the NPC</param>
     /// <param name="radius">>Desired radius of the circle</param>
-    public void DrawCircle(Vector3 position, float radius)
-    {
+    public void DrawCircle(Vector3 position, float radius) {
         line.positionCount = 51;
         line.useWorldSpace = true;
         float x;
         float z;
         float angle = 20f;
 
-        for (int i = 0; i < 51; i++)
-        {
+        for (int i = 0; i < 51; i++) {
             x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
             z = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
 
@@ -189,10 +179,8 @@ public class NPCController : MonoBehaviour
     /// <summary>
     /// This is used to help erase the prevously drawn line or circle
     /// </summary>
-    public void DestroyPoints()
-    {
-        if (line)
-        {
+    public void DestroyPoints() {
+        if (line) {
             line.positionCount = 0;
         }
     }

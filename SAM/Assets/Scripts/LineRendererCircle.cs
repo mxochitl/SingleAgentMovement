@@ -8,12 +8,9 @@ using System.Collections;
 /// 
 [RequireComponent(typeof(LineRenderer))]
 public class LineRendererCircle : MonoBehaviour {
-    [Range(0, 50)]
-    public int segments = 50;
-    [Range(0, 10)]
-    public float xradius = 5;
-    [Range(0, 10)]
-    public float zradius = 5;
+    [Range(0, 50)] public int segments = 50;
+    [Range(0, 10)] public float xradius = 5;
+    [Range(0, 10)] public float zradius = 5;
     LineRenderer line;
 
     void Start() {
